@@ -14,11 +14,6 @@ public class Note implements Serializable {
         contents="";
     }
     
-    public Note(String title, String contents) {
-        this.title = title;
-        this.contents = contents;
-    }
-    
      public String getTitle() {
         return title;
     }
