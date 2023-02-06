@@ -15,6 +15,11 @@
         <h1>Simple Note Keeper</h1>
         <h2>View Note</h2>
         
+        
+        
+        
+        <a href="note?edit"> 
+        
         <%--
         
         Title: <contents edit>
