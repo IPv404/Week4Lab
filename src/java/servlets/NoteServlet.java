@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package servlets;
 import java.io.*;
 import javax.servlet.ServletException;
@@ -21,8 +17,6 @@ public class NoteServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException 
     {
-        
-        
         String path = getServletContext().getRealPath("/WEB-INF/note.txt");
         // to read files
         BufferedReader br = new BufferedReader(new FileReader(new File(path)));
@@ -30,9 +24,8 @@ public class NoteServlet extends HttpServlet
         String title = br.readLine();
         //read second line, content
         String contents = br.readLine();
-        
         //close
-        br.close();
+        
         Note note = new Note(); 
         
         request.setAttribute("note", note);
@@ -40,39 +33,39 @@ public class NoteServlet extends HttpServlet
         note.setTitle(title);
         note.setContents(contents);
         
-          String edit = request.getParameter("edit");
+        br.close();
+
+        
+        String edit = request.getParameter("edit");
           
           if(edit != null){
-              getServletContext().getRequestDispatcher("/WEB-INF/editnote.jsp").forward(request, response);
+             getServletContext().getRequestDispatcher("/WEB-INF/editnote.jsp").forward(request, response);
             return;
           }
         
         getServletContext().getRequestDispatcher("/WEB-INF/viewnote.jsp")
                 .forward(request, response);
-
     }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException 
     {
+        
+        //CODE BY Azrie
+        //Examining their code really helped me understand why it wasnt saving properly!
+        Note note = new Note(request.getParameter("title"),request.getParameter("contents"));
+        
         String path = getServletContext().getRealPath("/WEB-INF/note.txt");
+        PrintWriter pw; 
+        pw = new PrintWriter(new BufferedWriter(new FileWriter(path, false)));
+        pw.println(note.getTitle());
+        pw.print(note.getContents());
+        pw.close();
         
-        //set title/contents
+        note.setContents(note.getContents().replace("\n", "<br>"));
         
-        String title = request.getParameter("title");
-        String contents = request.getParameter("contents");
-        
-        //create new note obj and set attribute
-        Note note = new Note();
         request.setAttribute("note", note);
-        
-        //write in note
-        PrintWriter edit = new PrintWriter(new BufferedWriter(
-                new FileWriter(path, false)));
-        
-        edit.print(note.getTitle());
-        edit.print(note.getContents());
         
         getServletContext().getRequestDispatcher("/WEB-INF/viewnote.jsp")
                 .forward(request, response);
